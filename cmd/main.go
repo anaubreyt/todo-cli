@@ -8,7 +8,15 @@ import (
 func main() {
 	// fmt.Println("hello")
 	task := tasks.NewTask("Cup of tea", "let's go")
-	fmt.Println(task)
+	task2 := tasks.NewTask("Cup of tea2", "let's go2")
+	task3 := tasks.NewTask("Cup of tea3", "let's go3")
+	to_do := tasks.NewTaskList("Home work")
+	to_do.AddTaskToList(task)
+	to_do.AddTaskToList(task2)
+	to_do.AddTaskToList(task3)
+	fmt.Println(*to_do)
+
+	to_do.DeleteTaskFromList(0)
 }
 
 // есть конфигурационный файл
