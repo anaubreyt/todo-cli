@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"todo-cli/pkg/tasks"
 )
 
 func main() {
-	fmt.Println("hello")
+	// fmt.Println("hello")
+	task := tasks.NewTask("Cup of tea", "let's go")
+	fmt.Println(task)
 }
 
 // есть конфигурационный файл
