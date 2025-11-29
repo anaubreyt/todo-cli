@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"todo-cli/pkg/tasks"
 )
 
@@ -14,8 +13,6 @@ func main() {
 	to_do.AddTaskToList(task)
 	to_do.AddTaskToList(task2)
 	to_do.AddTaskToList(task3)
-	fmt.Println(*to_do)
-
 	to_do.DeleteTaskFromList(0)
 }
 
