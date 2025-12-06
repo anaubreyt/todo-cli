@@ -40,14 +40,19 @@ func (t *TaskList) AddTaskToList(elem *Task) {
 	t.List = append(t.List, elem)
 }
 
+func (t *TaskList) PrintList() {
+	for _, v := range t.List {
+		fmt.Printf("Position: %v, name %v\n", v.Id, v.Name)
+	}
+}
+
 func (t *TaskList) DeleteTaskFromList(position int) {
-	fmt.Println(t.List)
+	before := t.List[:position]
 	for _, elem := range t.List {
-		if position == elem.Id {
-			before := t.List[:position]
-			after := t.List[position+1:]
-			t.List = append(before, after...)
+		if elem.Id > position {
+			elem.Id--
 		}
 	}
-	fmt.Println(t.List)
+	after := t.List[position+1:]
+	t.List = append(before, after...)
 }
