@@ -47,6 +47,11 @@ func (t *TaskList) PrintList() {
 }
 
 func (t *TaskList) DeleteTaskFromList(position int) {
+	if position >= len(t.List) {
+		err := fmt.Errorf("position %v outside of list range", position)
+		fmt.Println("error when deleting:", err.Error())
+		return
+	}
 	before := t.List[:position]
 	for _, elem := range t.List {
 		if elem.Id > position {
