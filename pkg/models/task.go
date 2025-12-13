@@ -1,23 +1,39 @@
-package tasks
+package models
 
 import (
 	"fmt"
 	_ "fmt"
 	"time"
+	"todo-cli/pkg/config"
+	_ "todo-cli/pkg/config"
 )
 
 type Task struct {
-	Status    bool
-	Id        int
-	Name      string
-	Descr     string
-	TimeStamp time.Time
-	Author    string
+	Status    bool      `json:"status"`
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	Descr     string    `json:"descr"`
+	TimeStamp time.Time `json:"timeStamp"`
+	Author    string    `json:"author"`
+}
+
+func (Task) TableName() string {
+	return "task"
 }
 
 type TaskList struct {
 	List       []*Task
 	NameOfList string
+}
+
+func GetTask() []Task {
+	db := config.GetDB()
+	var task []Task
+	result := db.Find(&task)
+	if result.Error != nil {
+		fmt.Printf("Some error: %v", result.Error.Error())
+	}
+	return task
 }
 
 func NewTask(name string, descr string) *Task {

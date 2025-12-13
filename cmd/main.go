@@ -1,21 +1,19 @@
 package main
 
 import (
-	"todo-cli/pkg/config"
-	"todo-cli/pkg/tasks"
+	"log"
+	"net/http"
+	_ "todo-cli/pkg/config"
+	"todo-cli/pkg/routes"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	// fmt.Println("hello")
-	config.Connect()
-	task := tasks.NewTask("Cup of tea", "let's go")
-	task2 := tasks.NewTask("Cup of tea2", "let's go2")
-	task3 := tasks.NewTask("Cup of tea3", "let's go3")
-	to_do := tasks.NewTaskList("Home work")
-	to_do.AddTaskToList(task)
-	to_do.AddTaskToList(task2)
-	to_do.AddTaskToList(task3)
-	to_do.DeleteTaskFromList(0)
+	route := mux.NewRouter()
+	routes.RegisterUserRoutes(route)
+	http.Handle("/", route)
+	log.Fatal(http.ListenAndServe("localhost:8182", route))
 }
 
 // есть конфигурационный файл

@@ -7,7 +7,7 @@ import (
 
 var db *gorm.DB
 
-func Connect() {
+func init() {
 	dsn := "host=localhost user=postgres password=Qwerty123$ dbname=todo port=5432 sslmode=disable "
 	d, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
