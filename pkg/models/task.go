@@ -9,12 +9,12 @@ import (
 )
 
 type Task struct {
-	Status    bool      `json:"status"`
-	Id        int       `json:"id"`
-	Name      string    `json:"name"`
-	Descr     string    `json:"descr"`
-	TimeStamp time.Time `json:"timeStamp"`
-	Author    string    `json:"author"`
+	Status      bool      `json:"status"`
+	Id          int       `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Tm_stamp    time.Time `json:"tmStamp"`
+	Author      string    `json:"author"`
 }
 
 func (Task) TableName() string {
@@ -36,13 +36,19 @@ func GetTask() []Task {
 	return task
 }
 
+func AddTask(task *Task) *Task {
+	db := config.GetDB()
+	db.Create(&task)
+	return task
+}
+
 func NewTask(name string, descr string) *Task {
 	return &Task{
-		Status:    false,
-		Id:        0,
-		Name:      name,
-		Descr:     descr,
-		TimeStamp: time.Now(),
+		Status:      false,
+		Id:          0,
+		Name:        name,
+		Description: descr,
+		Tm_stamp:    time.Now(),
 	}
 }
 
