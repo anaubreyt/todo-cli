@@ -1,11 +1,13 @@
 package main
 
 import (
+	"todo-cli/pkg/config"
 	"todo-cli/pkg/tasks"
 )
 
 func main() {
 	// fmt.Println("hello")
+	config.Connect()
 	task := tasks.NewTask("Cup of tea", "let's go")
 	task2 := tasks.NewTask("Cup of tea2", "let's go2")
 	task3 := tasks.NewTask("Cup of tea3", "let's go3")
