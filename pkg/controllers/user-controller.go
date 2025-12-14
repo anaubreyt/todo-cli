@@ -19,8 +19,8 @@ func GetTasks(writer http.ResponseWriter, request *http.Request) {
 func AddTask(writer http.ResponseWriter, request *http.Request) {
 	addTask := &models.Task{}
 	utils.ParseBody(request, addTask)
-	user := models.AddTask(addTask)
-	res, _ := json.Marshal(user)
+	task := models.AddTask(addTask)
+	res, _ := json.Marshal(task)
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	writer.Write(res)
