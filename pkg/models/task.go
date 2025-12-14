@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
-	_ "fmt"
 	"time"
 	"todo-cli/pkg/config"
 	_ "todo-cli/pkg/config"
+
+	"gorm.io/gorm"
 )
 
 type Task struct {
@@ -13,8 +14,25 @@ type Task struct {
 	Id          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Tm_stamp    time.Time `json:"tmStamp"`
+	Tm_stamp    time.Time `json:"-" gorm:"column:tm_stamp"`
 	Author      string    `json:"author"`
+
+	// Для приема JSON
+	TmStampJSON int64 `json:"tmStamp" gorm:"-"`
+}
+
+// Хук GORM BeforeCreate для установки текущего времени при создании task и правильного формата сохранения в БД
+func (t *Task) BeforeCreate(tx *gorm.DB) error {
+	// Если в JSON указан tmStamp
+	if t.TmStampJSON > 0 {
+		t.Tm_stamp = time.UnixMilli(t.TmStampJSON)
+	}
+
+	// Если в JSON tmStamp пуст ставится текущее время
+	if t.Tm_stamp.IsZero() {
+		t.Tm_stamp = time.Now()
+	}
+	return nil
 }
 
 func (Task) TableName() string {

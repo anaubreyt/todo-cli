@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"todo-cli/pkg/models"
 	"todo-cli/pkg/utils"
@@ -20,8 +21,18 @@ func AddTask(writer http.ResponseWriter, request *http.Request) {
 	addTask := &models.Task{}
 	utils.ParseBody(request, addTask)
 	task := models.AddTask(addTask)
-	res, _ := json.Marshal(task)
+	res, err := json.Marshal(task)
+	// Добавили проверку на прохождение сериализации
+	if err != nil {
+		http.Error(writer, "Internal server error", http.StatusInternalServerError)
+		log.Printf("JSON marshal error: %v", err)
+	}
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
-	writer.Write(res)
+	// Залогируем ошибку от .Write(res) на случай разрыва соединения
+	// Но статус код выше не поменяется!
+	_, err = writer.Write(res)
+	if err != nil {
+		log.Printf("Writer response error: %v", err)
+	}
 }
