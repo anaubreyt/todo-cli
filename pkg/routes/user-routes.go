@@ -7,7 +7,7 @@ import (
 )
 
 var RegisterUserRoutes = func(router *mux.Router) {
-	//Get tasks
 	router.HandleFunc("/tasks", controllers.GetTasks).Methods("GET")
 	router.HandleFunc("/tasks", controllers.AddTask).Methods("POST")
+	router.HandleFunc("/tasks/{id}", controllers.DeleteTask).Methods("DELETE")
 }

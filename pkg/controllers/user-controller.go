@@ -4,8 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"todo-cli/pkg/models"
 	"todo-cli/pkg/utils"
+
+	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 func GetTasks(writer http.ResponseWriter, request *http.Request) {
@@ -35,4 +39,28 @@ func AddTask(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Printf("Writer response error: %v", err)
 	}
+}
+
+func DeleteTask(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(writer, "Invalid task ID", http.StatusBadRequest)
+		log.Printf("invalid task ID: %v", err)
+		return
+	}
+
+	err = models.DeleteTask(id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			http.Error(writer, "Task not found", http.StatusNotFound)
+		} else {
+			http.Error(writer, "Failed to delete task", http.StatusInternalServerError)
+		}
+		log.Printf("Delete task error: %v", err)
+		return
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+
 }

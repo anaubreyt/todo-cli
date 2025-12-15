@@ -78,6 +78,18 @@ func AddTask(task *Task) *Task {
 	return task
 }
 
+// localhost:8182/tasks/1 - for test in Insomnia
+func DeleteTask(id int) error {
+	db := config.GetDB()
+	var task []Task
+	result := db.First(&task, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	result = db.Delete(&task)
+	return result.Error
+}
+
 func NewTask(name string, descr string) *Task {
 	return &Task{
 		Status:      false,
