@@ -14,7 +14,7 @@ type Task struct {
 	Id          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Tm_stamp    time.Time `json:"-" gorm:"column:tm_stamp"`
+	Tm_stamp    time.Time `json:"-" gorm:"column:tm_stamp;type:timestamp"`
 	Author      string    `json:"author"`
 
 	// Для приема JSON
@@ -31,6 +31,24 @@ func (t *Task) BeforeCreate(tx *gorm.DB) error {
 	// Если в JSON tmStamp пуст ставится текущее время
 	if t.Tm_stamp.IsZero() {
 		t.Tm_stamp = time.Now()
+	}
+	return nil
+}
+
+// Хук GORM для корректной обработки JSON запроса GET из БД
+// Для корректной работы time.Time в БД с GORM изменили тип колонки
+// 1. ALTER TABLE task DROP COLUMN tm_stamp;
+// 2. ALTER TABLE task ADD COLUMN tm_stamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP;
+func (t *Task) AfterFind(tx *gorm.DB) error {
+	fmt.Printf("DEBUG AfterFind: Task ID=%d, Tm_stamp=%v, IsZero=%v\n",
+		t.Id, t.Tm_stamp, t.Tm_stamp.IsZero())
+	if !t.Tm_stamp.IsZero() {
+		t.TmStampJSON = t.Tm_stamp.UnixMilli()
+		fmt.Printf("DEBUG AfterFind: Task ID=%v, TmStampJSON=%d\n",
+			t.Id, t.TmStampJSON)
+	} else {
+		fmt.Printf("DEBUG AfterFInd: Task ID=%v, tm_stamp is zero!\n",
+			t.Id)
 	}
 	return nil
 }
