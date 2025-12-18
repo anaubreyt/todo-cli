@@ -1,6 +1,8 @@
 package models
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	_ "fmt"
 	"time"
@@ -9,12 +11,12 @@ import (
 )
 
 type Task struct {
-	Status      bool      `json:"status"`
-	Id          int       `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Tm_stamp    time.Time `json:"tmStamp"`
-	Author      string    `json:"author"`
+	Status      bool   `json:"status"`
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Tm_stamp    string `json:"tm_stamp"`
+	Author      string `json:"author"`
 }
 
 func (Task) TableName() string {
@@ -36,6 +38,30 @@ func GetTask() []Task {
 	return task
 }
 
+func GetSingleTask(id string) Task {
+	ctx := context.Background()
+	cl := config.GetRedis()
+	var t Task
+	val, err := cl.Get(ctx, id).Result()
+	if err == nil {
+		json.Unmarshal([]byte(val), &t)
+		fmt.Printf("Value %v for id %v returned from cache\n", val, id)
+		return t
+	} else {
+		db := config.GetDB()
+		res := db.Where("id = ?", id)
+		res = res.First(&t)
+		if res.Error != nil {
+			return Task{}
+		} else {
+			fmt.Printf("Value %v for key %v returned from database and stored in cache\n", t, id)
+			jsonData, _ := json.Marshal(t)
+			cl.Set(ctx, id, jsonData, time.Minute*10)
+			return t
+		}
+	}
+}
+
 func AddTask(task *Task) *Task {
 	db := config.GetDB()
 	db.Create(&task)
@@ -48,7 +74,7 @@ func NewTask(name string, descr string) *Task {
 		Id:          0,
 		Name:        name,
 		Description: descr,
-		Tm_stamp:    time.Now(),
+		Tm_stamp:    time.Now().String(),
 	}
 }
 

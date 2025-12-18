@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	_ "todo-cli/pkg/config"
@@ -13,6 +14,7 @@ func main() {
 	route := mux.NewRouter()
 	routes.RegisterUserRoutes(route)
 	http.Handle("/", route)
+	fmt.Println("Listening on 8182...")
 	log.Fatal(http.ListenAndServe("localhost:8182", route))
 }
 

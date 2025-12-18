@@ -5,11 +5,23 @@ import (
 	"net/http"
 	"todo-cli/pkg/models"
 	"todo-cli/pkg/utils"
+
+	"github.com/gorilla/mux"
 )
 
 func GetTasks(writer http.ResponseWriter, request *http.Request) {
 	task := models.GetTask()
 
+	res, _ := json.Marshal(task)
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(res)
+}
+
+func GetTask(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	id := vars["taskId"]
+	task := models.GetSingleTask(id)
 	res, _ := json.Marshal(task)
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
