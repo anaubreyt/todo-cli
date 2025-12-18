@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"todo-cli/internal/redisCache"
 	_ "todo-cli/pkg/config"
 	"todo-cli/pkg/routes"
 
@@ -13,7 +16,20 @@ func main() {
 	route := mux.NewRouter()
 	routes.RegisterUserRoutes(route)
 	http.Handle("/", route)
-	log.Fatal(http.ListenAndServe("localhost:8182", route))
+	
+	err := redisCache.SetKey("todo1", "{task: 1}", 0)
+	if err != nil {
+		log.Printf("ERROR %v", err)
+	}
+	
+	val, err := redisCache.GetKey("todo1")
+	if err != nil {
+		log.Printf("ERROR %v", err)
+	}
+	
+	fmt.Println("[RESULT REDIS]: ", val)
+	
+	log.Fatal(http.ListenAndServe(os.Getenv("HANDLER_URL"), route))
 }
 
 // есть конфигурационный файл
