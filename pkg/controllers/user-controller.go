@@ -16,6 +16,10 @@ func GetTasks(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(res)
 }
 
+func GetTask_byID() {
+
+}
+
 func AddTask(writer http.ResponseWriter, request *http.Request) {
 	addTask := &models.Task{}
 	utils.ParseBody(request, addTask)
