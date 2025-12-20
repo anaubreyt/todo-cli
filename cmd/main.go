@@ -11,7 +11,7 @@ import (
 
 func main() {
 	route := mux.NewRouter()
-	routes.RegisterUserRoutes(route)
+	routes.RegisterTaskRoutes(route)
 	http.Handle("/", route)
 	log.Fatal(http.ListenAndServe("localhost:8182", route))
 }
@@ -20,3 +20,13 @@ func main() {
 // в консоли выводим меню, там список действий:
 // создать / посмотреть / изменить статус / редактировать / удалить
 // выход из апп
+
+
+// route.HandleFunc("/test", func (writer http.ResponseWriter, r *http.Request) {
+// 	fmt.Printf("test test testik")
+// 		writer.Header().Set("Content-Type", "application/json")
+// 		writer.WriteHeader(http.StatusOK)
+// 		s := "Привет, мир!"
+// 		b := []byte(s)
+// 		writer.Write(b)
+// })

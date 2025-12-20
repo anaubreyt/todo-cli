@@ -2,10 +2,8 @@ package models
 
 import (
 	"fmt"
-	_ "fmt"
 	"time"
 	"todo-cli/pkg/config"
-	_ "todo-cli/pkg/config"
 )
 
 type Task struct {
@@ -40,6 +38,15 @@ func AddTask(task *Task) *Task {
 	db := config.GetDB()
 	db.Create(&task)
 	return task
+}
+
+func DeleteTask(task *Task) error{
+	db := config.GetDB()
+	err := db.Delete(&Task{}, task)
+	if err != nil {
+		fmt.Println("[ERROR DELETE TASK]: ", task)
+	}
+	return nil
 }
 
 func NewTask(name string, descr string) *Task {
