@@ -2,7 +2,6 @@ package routes
 
 import (
 	"todo-cli/pkg/controllers"
-
 	"github.com/gorilla/mux"
 )
 

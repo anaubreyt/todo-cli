@@ -5,7 +5,7 @@ import (
 	"net/http"
 	_ "todo-cli/pkg/config"
 	"todo-cli/pkg/routes"
-
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/gorilla/mux"
 )
 
