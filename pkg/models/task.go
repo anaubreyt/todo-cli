@@ -34,9 +34,25 @@ func GetTask() []Task {
 	return task
 }
 
+func GetTaskById(id int) []Task {
+	db := config.GetDB()
+	var task []Task
+	result := db.First(&task, id) 
+	if result.Error != nil {
+		fmt.Printf("Some error: %v", result.Error.Error())
+	}
+	return task
+}
+
 func AddTask(task *Task) *Task {
 	db := config.GetDB()
 	db.Create(&task)
+	return task
+}
+
+func UpdateTask(task *Task) *Task {
+	db := config.GetDB()
+	db.Save(&task)
 	return task
 }
 

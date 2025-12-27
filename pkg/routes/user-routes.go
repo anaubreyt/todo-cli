@@ -8,12 +8,14 @@ import (
 var RegisterTaskRoutes = func(router *mux.Router) {
 	//Get tasks
 	router.HandleFunc("/tasks", controllers.GetTasks).Methods("GET")
+	//Get task by id
+	router.HandleFunc("/task/{id:[0-9]+}", controllers.GetTaskById).Methods("GET")
 	//Post tasks
 	router.HandleFunc("/tasks", controllers.AddTask).Methods("POST")
 	//Delete tasks
-	router.HandleFunc("/delete", controllers.DeleteTask).Methods("DELETE")
-	//Update tasks
-	router.HandleFunc("/tasks", controllers.AddTask).Methods("PATCH")
+	router.HandleFunc("/delete/{id:[0-9]+}", controllers.DeleteTask).Methods("DELETE")
+	//Update task by id
+	router.HandleFunc("/task/{id:[0-9]+}", controllers.UpdateTask).Methods("PATCH")
 }
 
 // 
